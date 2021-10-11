@@ -1,9 +1,10 @@
 import { CSSProperties } from 'react';
 import { FallingObjectState } from '../state/FallingObjectState';
+import { LetterObjectState } from '../state/LetterObjectState';
 import { RandomUtils } from './RandomUtils';
 
-export class FallingObjectFactory {
-  public static createObject() {
+export class LetterObjectFactory {
+  public static createLetterObject() {
     // Position along screen using left property
     const leftPos = RandomUtils.getRandomRangeInt(1, 80);
 
@@ -12,6 +13,6 @@ export class FallingObjectFactory {
       animationDuration: '2s',
     };
 
-    return new FallingObjectState(style);
+    return new LetterObjectState(style);
   }
 }

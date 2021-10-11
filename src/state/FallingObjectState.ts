@@ -1,9 +1,16 @@
 import { CSSProperties } from 'react';
 import { RandomUtils } from '../utils/RandomUtils';
 
+// Before entering screen, during on screen, after exiting screen
+enum FallingStage {
+  BEFORE = 'before',
+  DURING = 'during',
+  AFTER = 'after',
+}
+
 export class FallingObjectState {
   public id: string;
-  public onScreen = false;
+  public stage = FallingStage.BEFORE;
   public style: CSSProperties;
 
   constructor(style: CSSProperties) {
@@ -11,11 +18,19 @@ export class FallingObjectState {
     this.style = style;
   }
 
+  public hasExitedScreen() {
+    return this.stage === FallingStage.AFTER;
+  }
+
   public enterScreen = () => {
-    this.onScreen = true;
+    this.stage = FallingStage.DURING;
   };
 
   public exitScreen = () => {
-    this.onScreen = false;
+    // Cannot exit if never entered
+    // Necessary due to IO initial call
+    if (this.stage === FallingStage.DURING) {
+      this.stage = FallingStage.AFTER;
+    }
   };
 }

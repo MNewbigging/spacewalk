@@ -18,7 +18,7 @@ export class GameScreen extends React.Component<Props> {
     return (
       <div className={'game-screen'}>
         {gameState.letterObjects.map((obj) => (
-          <FallingObject fallingObject={obj}>
+          <FallingObject key={obj.id} fallingObject={obj}>
             <div className={'test'}>TEST</div>
           </FallingObject>
         ))}
