@@ -1,5 +1,6 @@
 import { action, observable } from 'mobx';
 import { CSSProperties } from 'react';
+import { GameEvent, gameObserver } from '../events/GameObserver';
 import { keyboardObserver } from '../events/KeyboardObserver';
 import { RandomUtils } from '../utils/RandomUtils';
 import { FallingObjectState } from './FallingObjectState';
@@ -59,6 +60,7 @@ export class LetterObjectState extends FallingObjectState {
         // Letter object now active
         this.active = true;
         //setTimeout(this.resetLetterHighlights, 500);
+        gameObserver.fireEvent(GameEvent.COMPLETE_LETTER_OBJ);
       }
     } else {
       // Otherwise, if there were existing highlighted letters, show warning

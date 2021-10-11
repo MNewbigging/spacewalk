@@ -14,7 +14,7 @@ export class LetterObjectFactory {
 
     // Generate random letters for this object
     const minLetters = 1;
-    const maxLetters = 3;
+    const maxLetters = 10;
     const letterCount = RandomUtils.getRandomRangeInt(minLetters, maxLetters);
 
     const letters = RandomUtils.getRandomLetters(letterCount);
