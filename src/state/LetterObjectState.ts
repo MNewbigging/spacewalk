@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { action, observable } from 'mobx';
 import { CSSProperties } from 'react';
 import { keyboardObserver } from '../events/KeyboardObserver';
 import { RandomUtils } from '../utils/RandomUtils';
@@ -37,12 +37,32 @@ export class LetterObjectState extends FallingObjectState {
 
   private onKeyPress = (key: string) => {
     // Only care about keys a-z
-    console.log('testing key press for key: ', key);
-
-    if (!key.search(/[a-zA-Z]/)) {
-      console.log('alphabetical');
-    } else {
-      console.log('not of this alphabet');
+    if (!/[a-zA-Z]/.test(key)) {
+      return;
     }
+
+    // If this key is same as first non-highlighted letter
+    const nextLetter = this.letters.find(
+      (letter) => letter.highlight === LetterHighlightState.NONE
+    );
+    if (!nextLetter) {
+      // Already all highlighted; do nothing (should have removed listener by now)
+      return;
+    }
+
+    // Highlight the letter if it's a match
+    if (nextLetter.char === key) {
+      nextLetter.highlight = LetterHighlightState.HIGHLIGHT;
+    } else {
+      // Otherwise, if there were existing highlighted letters, show warning
+      if (this.letters.find((l) => l.highlight === LetterHighlightState.HIGHLIGHT)) {
+        this.letters.forEach((letter) => (letter.highlight = LetterHighlightState.WARN));
+        setTimeout(this.resetLetterHighlights, 500);
+      }
+    }
+  };
+
+  @action private resetLetterHighlights = () => {
+    this.letters.forEach((letter) => (letter.highlight = LetterHighlightState.NONE));
   };
 }
