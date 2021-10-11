@@ -5,9 +5,17 @@ export class RandomUtils {
 
     for (let i = 0; i < length; i++) {
       const rnd = Math.floor(Math.random() * characters.length);
-      id += characters[rnd];
+      id += characters.charAt(rnd);
     }
 
     return id;
+  }
+
+  public static getRandomLetter() {
+    const letters = 'abcdefghijklmnopqrstuvwxyz';
+
+    const rnd = Math.floor(Math.random() * letters.length);
+
+    return letters.charAt(rnd);
   }
 }

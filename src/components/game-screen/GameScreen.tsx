@@ -1,5 +1,6 @@
 import React from 'react';
 import { GameState } from '../../state/GameState';
+import { FallingObject } from './game-objects/FallingObject';
 
 import './game-screen.scss';
 
@@ -9,6 +10,14 @@ interface Props {
 
 export class GameScreen extends React.Component<Props> {
   public render() {
-    return <div className={'game-screen'}></div>;
+    const { gameState } = this.props;
+
+    return (
+      <div className={'game-screen'}>
+        <FallingObject onEnter={gameState.onEnter} onExit={gameState.onExit}>
+          <div className={'test'}>TEST</div>
+        </FallingObject>
+      </div>
+    );
   }
 }
