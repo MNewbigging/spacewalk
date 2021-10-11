@@ -8,9 +8,11 @@ interface Props {
 
 export class StartScreen extends React.Component<Props> {
   public render() {
+    const { startGame } = this.props;
+
     return (
       <div className={'start-screen'}>
-        <button>Start</button>
+        <button onClick={startGame}>Start</button>
       </div>
     );
   }
