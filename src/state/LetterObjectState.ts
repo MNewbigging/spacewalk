@@ -18,6 +18,7 @@ export interface Letter {
 export class LetterObjectState extends FallingObjectState {
   public id: string;
   @observable public letters: Letter[];
+  @observable public active = false;
 
   constructor(style: CSSProperties, letters: string) {
     super(style);
@@ -42,17 +43,23 @@ export class LetterObjectState extends FallingObjectState {
     }
 
     // If this key is same as first non-highlighted letter
-    const nextLetter = this.letters.find(
+    const nextLetterIdx = this.letters.findIndex(
       (letter) => letter.highlight === LetterHighlightState.NONE
     );
-    if (!nextLetter) {
-      // Already all highlighted; do nothing (should have removed listener by now)
+    if (nextLetterIdx < 0) {
       return;
     }
+    const nextLetter = this.letters[nextLetterIdx];
 
     // Highlight the letter if it's a match
     if (nextLetter.char === key) {
       nextLetter.highlight = LetterHighlightState.HIGHLIGHT;
+      // Is this the last letter?
+      if (nextLetterIdx === this.letters.length - 1) {
+        // Letter object now active
+        this.active = true;
+        //setTimeout(this.resetLetterHighlights, 500);
+      }
     } else {
       // Otherwise, if there were existing highlighted letters, show warning
       if (this.letters.find((l) => l.highlight === LetterHighlightState.HIGHLIGHT)) {
