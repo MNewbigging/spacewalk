@@ -13,9 +13,11 @@ class KeyboardObserver {
     this.keyListeners.push(listener);
   }
 
-  private readonly onKeyDown = (e: KeyboardEvent) => {
-    // Only care about keys A-Z (but what about other hotkeys? need separate listener arrays and add/remove fns)
+  public removeKeyListener(listener: KeyListener) {
+    this.keyListeners = this.keyListeners.filter((kl) => kl !== listener);
+  }
 
+  private readonly onKeyDown = (e: KeyboardEvent) => {
     // Ensures listeners are only called once
     if (this.pressedKeys.has(e.key)) {
       return;

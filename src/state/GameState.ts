@@ -2,9 +2,10 @@ import { action, observable } from 'mobx';
 import { LetterObjectFactory } from '../utils/LetterObjectFactory';
 import { RandomUtils } from '../utils/RandomUtils';
 import { FallingObjectState } from './FallingObjectState';
+import { LetterObjectState } from './LetterObjectState';
 
 export class GameState {
-  @observable public letterObjects: FallingObjectState[] = [];
+  @observable public letterObjects: LetterObjectState[] = [];
 
   constructor() {
     this.queueLetterObject();
@@ -30,6 +31,9 @@ export class GameState {
 
   @action private removeLetterObjects() {
     // Removes any letter objects that have moved off screen
+    const oldLetters = this.letterObjects.filter((obj) => obj.hasExitedScreen());
+    oldLetters.forEach((letter) => letter.onRemove());
+
     this.letterObjects = this.letterObjects.filter((obj) => !obj.hasExitedScreen());
   }
 }

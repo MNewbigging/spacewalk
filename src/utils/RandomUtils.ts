@@ -19,11 +19,15 @@ export class RandomUtils {
     return Math.floor(this.getRandomRangeFloat(min, max));
   }
 
-  public static getRandomLetter() {
+  public static getRandomLetters(count: number) {
     const letters = 'abcdefghijklmnopqrstuvwxyz';
+    let ret = '';
 
-    const rnd = Math.floor(Math.random() * letters.length);
+    for (let i = 0; i < count; i++) {
+      const rnd = Math.floor(Math.random() * letters.length);
+      ret += letters.charAt(rnd);
+    }
 
-    return letters.charAt(rnd);
+    return ret;
   }
 }
