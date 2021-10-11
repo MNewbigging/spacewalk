@@ -1,22 +1,16 @@
 .falling-object {
   position: absolute;
-  top: -100%;
+  top: -50vh;
   width: fit-content;
   height: fit-content;
 
-  border: 1px solid black;
   animation-name: fall;
   animation-timing-function: linear;
-  animation-duration: 2s;
   animation-iteration-count: 1;
 }
 
 @keyframes fall {
-  0% {
-    transform: translateY(0);
-  }
-
   100% {
-    transform: translateY(140vh);
+    transform: translateY(150vh);
   }
 }

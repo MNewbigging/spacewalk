@@ -11,6 +11,14 @@ export class RandomUtils {
     return id;
   }
 
+  public static getRandomRangeFloat(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+  }
+
+  public static getRandomRangeInt(min: number, max: number) {
+    return Math.floor(this.getRandomRangeFloat(min, max));
+  }
+
   public static getRandomLetter() {
     const letters = 'abcdefghijklmnopqrstuvwxyz';
 

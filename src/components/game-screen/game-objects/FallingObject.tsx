@@ -1,10 +1,11 @@
 import React, { createRef } from 'react';
 
+import { FallingObjectState } from '../../../state/FallingObjectState';
+
 import './falling-object.scss';
 
 interface Props {
-  onEnter: () => void;
-  onExit: () => void;
+  fallingObject: FallingObjectState;
 }
 
 export class FallingObject extends React.Component<Props> {
@@ -12,7 +13,7 @@ export class FallingObject extends React.Component<Props> {
   private ref = createRef<HTMLDivElement>();
 
   componentDidMount() {
-    const { onEnter, onExit } = this.props;
+    const { fallingObject } = this.props;
 
     const obsProps: IntersectionObserverInit = {
       root: null,
@@ -22,9 +23,9 @@ export class FallingObject extends React.Component<Props> {
 
     this.observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        onEnter();
+        fallingObject.enterScreen();
       } else {
-        onExit();
+        fallingObject.exitScreen();
       }
     }, obsProps);
 
@@ -34,8 +35,10 @@ export class FallingObject extends React.Component<Props> {
   }
 
   public render() {
+    const { fallingObject } = this.props;
+
     return (
-      <div ref={this.ref} className={'falling-object'}>
+      <div ref={this.ref} className={'falling-object'} style={fallingObject.style}>
         {this.props.children}
       </div>
     );

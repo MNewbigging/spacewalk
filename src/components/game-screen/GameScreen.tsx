@@ -1,4 +1,6 @@
+import { observer } from 'mobx-react';
 import React from 'react';
+
 import { GameState } from '../../state/GameState';
 import { FallingObject } from './game-objects/FallingObject';
 
@@ -8,15 +10,18 @@ interface Props {
   gameState: GameState;
 }
 
+@observer
 export class GameScreen extends React.Component<Props> {
   public render() {
     const { gameState } = this.props;
 
     return (
       <div className={'game-screen'}>
-        <FallingObject onEnter={gameState.onEnter} onExit={gameState.onExit}>
-          <div className={'test'}>TEST</div>
-        </FallingObject>
+        {gameState.letterObjects.map((obj) => (
+          <FallingObject fallingObject={obj}>
+            <div className={'test'}>TEST</div>
+          </FallingObject>
+        ))}
       </div>
     );
   }
