@@ -1,7 +1,6 @@
 import { action, observable } from 'mobx';
 import { LetterObjectFactory } from '../utils/LetterObjectFactory';
 import { RandomUtils } from '../utils/RandomUtils';
-import { FallingObjectState } from './FallingObjectState';
 import { LetterObjectState } from './LetterObjectState';
 
 export class GameState {

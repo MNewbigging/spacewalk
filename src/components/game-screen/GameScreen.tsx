@@ -3,6 +3,7 @@ import React from 'react';
 
 import { GameState } from '../../state/GameState';
 import { FallingObject } from './game-objects/FallingObject';
+import { LetterObject } from './game-objects/LetterObject';
 
 import './game-screen.scss';
 
@@ -19,7 +20,7 @@ export class GameScreen extends React.Component<Props> {
       <div className={'game-screen'}>
         {gameState.letterObjects.map((obj) => (
           <FallingObject key={obj.id} fallingObject={obj}>
-            <div className={'test'}>TEST</div>
+            <LetterObject letterObject={obj} />
           </FallingObject>
         ))}
       </div>

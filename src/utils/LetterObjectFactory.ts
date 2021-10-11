@@ -1,5 +1,4 @@
 import { CSSProperties } from 'react';
-import { FallingObjectState } from '../state/FallingObjectState';
 import { LetterObjectState } from '../state/LetterObjectState';
 import { RandomUtils } from './RandomUtils';
 
@@ -10,7 +9,7 @@ export class LetterObjectFactory {
 
     const style: CSSProperties = {
       left: `${leftPos}%`,
-      animationDuration: '2s',
+      animationDuration: '10s',
     };
 
     // Generate random letters for this object
