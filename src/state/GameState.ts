@@ -5,9 +5,13 @@ import { LetterObjectState } from './LetterObjectState';
 
 export class GameState {
   @observable public letterObjects: LetterObjectState[] = [];
+  private paused = false;
 
   constructor() {
     this.queueLetterObject();
+
+    window.addEventListener('blur', this.onBlurWindow);
+    window.addEventListener('focus', this.onFocusWindow);
   }
 
   private queueLetterObject() {
@@ -19,6 +23,10 @@ export class GameState {
   }
 
   private addLetterObject = () => {
+    if (this.paused) {
+      return;
+    }
+
     // Adds a new letter object to be displayed
     const letterObj = LetterObjectFactory.createLetterObject();
 
@@ -35,4 +43,12 @@ export class GameState {
 
     this.letterObjects = this.letterObjects.filter((obj) => !obj.hasExitedScreen());
   }
+
+  private onBlurWindow = () => {
+    this.paused = true;
+  };
+
+  private onFocusWindow = () => {
+    this.paused = false;
+  };
 }

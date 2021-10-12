@@ -32,6 +32,14 @@ export class FallingObject extends React.Component<Props> {
     if (this.ref.current) {
       this.observer?.observe(this.ref.current);
     }
+
+    window.addEventListener('blur', this.onBlurWindow);
+    window.addEventListener('focus', this.onFocusWindow);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('blur', this.onBlurWindow);
+    window.removeEventListener('focus', this.onFocusWindow);
   }
 
   public render() {
@@ -43,4 +51,16 @@ export class FallingObject extends React.Component<Props> {
       </div>
     );
   }
+
+  private onBlurWindow = () => {
+    if (this.ref.current) {
+      this.ref.current.style.animationPlayState = 'paused';
+    }
+  };
+
+  private onFocusWindow = () => {
+    if (this.ref.current) {
+      this.ref.current.style.animationPlayState = 'running';
+    }
+  };
 }
