@@ -31,8 +31,19 @@ import '../assets/asteroidbelt_y.ogg';
 import '../assets/asteroidbelt_z.ogg';
 
 export class AudioFileLoader {
+  private basePath = '';
+
   constructor(private audioMap: Map<string, Howl>) {
+    this.setBasePath();
     this.loadAudioFiles();
+  }
+
+  private setBasePath() {
+    if (window.location.href.includes('localhost')) {
+      this.basePath = '../assets/';
+    } else {
+      this.basePath = '/spacewalk/assets/';
+    }
   }
 
   private loadAudioFiles() {
@@ -41,7 +52,7 @@ export class AudioFileLoader {
     // Background audio
     const bgBaseId = 'background-base';
     const bgBase = new Howl({
-      src: ['../assets/background-base.wav'],
+      src: [this.basePath + 'background-base.wav'],
       onloaderror: () => onLoadError(bgBaseId),
       onload: this.onLoadAudioFile,
       preload: false,
@@ -52,7 +63,7 @@ export class AudioFileLoader {
     const letters = 'abcdefghikjlmnopqrstuvwxyz'.split('');
     letters.forEach((char) => {
       const howl = new Howl({
-        src: [`../assets/asteroidbelt_${char}.ogg`],
+        src: [this.basePath + `/asteroidbelt_${char}.ogg`],
         onloaderror: () => onLoadError(char),
         onload: this.onLoadAudioFile,
         preload: false,

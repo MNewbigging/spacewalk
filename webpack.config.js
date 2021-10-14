@@ -26,19 +26,9 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
-        test: /\.(wav|ogg)$/i,
-        use: 'file-loader?name=[name].[ext]&outputPath=./spacewalk/assets/',
-      },
-      {
         test: /\.(wav|ogg|png|jpe?g|gif)$/i,
-        //use: 'file-loader?name=./assets/[name].[ext]',
         use: 'file-loader?name=[name].[ext]&outputPath=./assets/',
       },
-
-      // {
-      //   test: /\.wav$/,
-      //   use: 'file-loader?name=[name].[ext]&outputPath=./assets/',
-      // },
       {
         test: /\.svg$/,
         use: ['@svgr/webpack'],
