@@ -1,10 +1,14 @@
 import { LetterObjectState } from '../state/LetterObjectState';
+import { Letter } from '../utils/LetterObjectFactory';
 
 export enum GameEventType {
+  VALID_LETTER = 'valid-letter',
   COMPLETE_LETTER_OBJ = 'complete-letter-obj',
 }
 
-export type GameEvent = { event: GameEventType.COMPLETE_LETTER_OBJ; letterObj: LetterObjectState };
+export type GameEvent =
+  | { event: GameEventType.COMPLETE_LETTER_OBJ; letterObj: LetterObjectState }
+  | { event: GameEventType.VALID_LETTER; letter: Letter };
 
 type GameEventListener = (event: GameEvent) => void;
 

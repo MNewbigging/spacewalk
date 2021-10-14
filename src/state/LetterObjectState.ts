@@ -2,33 +2,21 @@ import { action, observable } from 'mobx';
 import { CSSProperties } from 'react';
 import { GameEventType, gameObserver } from '../events/GameObserver';
 import { keyboardObserver } from '../events/KeyboardObserver';
+import { Letter, LetterHighlightState } from '../utils/LetterObjectFactory';
 import { RandomUtils } from '../utils/RandomUtils';
 import { FallingObjectState } from './FallingObjectState';
-
-export enum LetterHighlightState {
-  NONE = 'none',
-  HIGHLIGHT = 'highlight',
-  WARN = 'warn',
-}
-
-export interface Letter {
-  char: string;
-  highlight: LetterHighlightState;
-}
 
 export class LetterObjectState extends FallingObjectState {
   public id: string;
   @observable public letters: Letter[];
   @observable public active = false;
 
-  constructor(style: CSSProperties, letters: string) {
+  constructor(style: CSSProperties, letters: Letter[]) {
     super(style);
 
     this.id = RandomUtils.createId();
 
-    this.letters = letters
-      .split('')
-      .map((char) => ({ char, highlight: LetterHighlightState.NONE }));
+    this.letters = letters;
 
     keyboardObserver.addKeyListener(this.onKeyPress);
   }

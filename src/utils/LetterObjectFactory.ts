@@ -2,6 +2,17 @@ import { CSSProperties } from 'react';
 import { LetterObjectState } from '../state/LetterObjectState';
 import { RandomUtils } from './RandomUtils';
 
+export enum LetterHighlightState {
+  NONE = 'none',
+  HIGHLIGHT = 'highlight',
+  WARN = 'warn',
+}
+
+export interface Letter {
+  char: string;
+  highlight: LetterHighlightState;
+}
+
 enum Letters {
   COMMON = 'srntlcdgmphaeiou', // 3
   UNCOMMON = 'yfvb', // 2
@@ -31,7 +42,8 @@ export class LetterObjectFactory {
     const maxLetters = 10;
     const letterCount = RandomUtils.getRandomRangeInt(minLetters, maxLetters);
 
-    const letters = this.pickLetters(this.lettersString, letterCount);
+    const pickedLetters = this.pickLetters(this.lettersString, letterCount);
+    const letters = this.makeLetters(pickedLetters);
 
     return new LetterObjectState(style, letters);
   }
@@ -62,5 +74,12 @@ export class LetterObjectFactory {
     }
 
     return picked;
+  }
+
+  private static makeLetters(pickedLetters: string) {
+    return pickedLetters.split('').map((char) => ({
+      char,
+      highlight: LetterHighlightState.NONE,
+    }));
   }
 }
