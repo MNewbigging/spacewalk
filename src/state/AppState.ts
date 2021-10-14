@@ -20,12 +20,11 @@ export class AppState {
 
   @action public startGame = () => {
     this.gameState = new GameState();
-
+    this.audioState.start();
     this.screen = Screen.GAME;
   };
 
   @action private onAudioLoaded = () => {
-    console.log('audio loaded appstate');
     this.loading = false;
   };
 }

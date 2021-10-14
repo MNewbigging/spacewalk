@@ -1,18 +1,10 @@
 import { Howl } from 'howler';
 import { GameEvent, GameEventType, gameObserver } from '../events/GameObserver';
 import { AudioUtils } from '../utils/AudioUtils';
+import { AudioFileLoader } from '../utils/AudioFileLoader';
 
 import '../assets/background-base.wav';
-
-export enum Interval {
-  FOUR,
-  EIGHT,
-  EIGHT_T,
-  SIXTEEN,
-  THIRTY_TWO,
-  SIXTY_FOUR,
-  ONE_TWO_EIGHT,
-}
+import '../assets/asteroidbelt_a.ogg';
 
 export class AudioState {
   private bpm = 120;
@@ -26,41 +18,13 @@ export class AudioState {
     this.letterIntervalMap = AudioUtils.makeLetterIntervalMap(this.bpm);
 
     // Load audio files
-    this.loadAudioFiles();
+    new AudioFileLoader(this.audioMap);
 
     gameObserver.addGameEventListener(this.onValidLetter, GameEventType.VALID_LETTER);
   }
 
-  private loadAudioFiles() {
-    const onLoadError = (id: string) => console.log('error loading audio file ' + id);
-
-    // Background audio
-    const bgBaseId = 'background-base';
-    const bgBase = new Howl({
-      src: ['../assets/background-base.wav'],
-      onloaderror: () => onLoadError(bgBaseId),
-      onload: this.onLoadAudioFile,
-      preload: false,
-    });
-    this.audioMap.set(bgBaseId, bgBase);
-
-    // Now load everything in the map
-    Array.from(this.audioMap.values()).forEach((howl) => howl.load());
-  }
-
-  private onLoadAudioFile = () => {
-    // filter down by loading files
-    const audio: Howl[] = Array.from(this.audioMap.values());
-    const loading = audio.filter((howl) => howl.state() === 'loading');
-
-    // If nothing in loading, we're done loading
-    if (!loading.length) {
-      gameObserver.fireEvent({ type: GameEventType.AUDIO_LOADED });
-    }
-  };
-
-  private start() {
-    //this.backgroundBase.play();
+  public start() {
+    this.audioMap.get('background-base').play();
     this.startTime = Date.now();
   }
 
