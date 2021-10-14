@@ -32,32 +32,42 @@ export class LetterObjectState extends FallingObjectState {
     }
 
     // If this key is same as first non-highlighted letter
-    const nextLetterIdx = this.letters.findIndex(
+    const nextLetter = this.letters.find(
       (letter) => letter.highlight === LetterHighlightState.NONE
     );
-    if (nextLetterIdx < 0) {
+    if (!nextLetter) {
       return;
     }
-    const nextLetter = this.letters[nextLetterIdx];
 
-    // Highlight the letter if it's a match
+    // If letter is a match
     if (nextLetter.char === key) {
-      nextLetter.highlight = LetterHighlightState.HIGHLIGHT;
-      gameObserver.fireEvent({ type: GameEventType.VALID_LETTER, letter: nextLetter });
-      // Is this the last letter?
-      if (nextLetterIdx === this.letters.length - 1) {
-        // Letter object now active
-        this.active = true;
-        gameObserver.fireEvent({ type: GameEventType.COMPLETE_LETTER_OBJ, letters: this.letters });
-      }
+      this.matchLetter(nextLetter);
     } else {
-      // Otherwise, if there were existing highlighted letters, show warning
+      // If there were existing highlighted letters, show warning
       if (this.letters.find((l) => l.highlight === LetterHighlightState.HIGHLIGHT)) {
         this.letters.forEach((letter) => (letter.highlight = LetterHighlightState.WARN));
         setTimeout(this.resetLetterHighlights, 500);
       }
     }
   };
+
+  private matchLetter(letter: Letter) {
+    // Highlight it
+    letter.highlight = LetterHighlightState.HIGHLIGHT;
+
+    // Send event for it
+    gameObserver.fireEvent({ type: GameEventType.VALID_LETTER, letter });
+
+    // Is this the last one to match?
+    const toMatch = this.letters.filter(
+      (letter) => letter.highlight !== LetterHighlightState.HIGHLIGHT
+    );
+    if (!toMatch.length) {
+      // Letter object now active
+      this.active = true;
+      gameObserver.fireEvent({ type: GameEventType.COMPLETE_LETTER_OBJ, letters: this.letters });
+    }
+  }
 
   @action private resetLetterHighlights = () => {
     this.letters.forEach((letter) => (letter.highlight = LetterHighlightState.NONE));
