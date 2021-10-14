@@ -1,4 +1,4 @@
-import { Howl, HowlOptions } from 'howler';
+import { Howl } from 'howler';
 import { GameEvent, GameEventType, gameObserver } from '../events/GameObserver';
 import { AudioUtils } from '../utils/AudioUtils';
 
@@ -19,25 +19,45 @@ export class AudioState {
   private startTime = 0;
   private letterIntervalMap: Map<string, number>;
   private intervalQueueMap = new Map<number, Set<string>>();
-  private backgroundBase: Howl;
+  private audioMap = new Map<string, Howl>();
 
   constructor() {
     // Generate the interval values map for each character
     this.letterIntervalMap = AudioUtils.makeLetterIntervalMap(this.bpm);
 
-    const options: HowlOptions = {};
-
-    this.backgroundBase = new Howl({
-      src: ['../assets/background-base.wav'],
-      onloaderror: () => {
-        console.log('load error');
-      },
-    });
+    // Load audio files
+    this.loadAudioFiles();
 
     gameObserver.addGameEventListener(this.onValidLetter, GameEventType.VALID_LETTER);
-
-    this.start();
   }
+
+  private loadAudioFiles() {
+    const onLoadError = (id: string) => console.log('error loading audio file ' + id);
+
+    // Background audio
+    const bgBaseId = 'background-base';
+    const bgBase = new Howl({
+      src: ['../assets/background-base.wav'],
+      onloaderror: () => onLoadError(bgBaseId),
+      onload: this.onLoadAudioFile,
+      preload: false,
+    });
+    this.audioMap.set(bgBaseId, bgBase);
+
+    // Now load everything in the map
+    Array.from(this.audioMap.values()).forEach((howl) => howl.load());
+  }
+
+  private onLoadAudioFile = () => {
+    // filter down by loading files
+    const audio: Howl[] = Array.from(this.audioMap.values());
+    const loading = audio.filter((howl) => howl.state() === 'loading');
+
+    // If nothing in loading, we're done loading
+    if (!loading.length) {
+      gameObserver.fireEvent({ type: GameEventType.AUDIO_LOADED });
+    }
+  };
 
   private start() {
     //this.backgroundBase.play();

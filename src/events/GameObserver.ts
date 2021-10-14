@@ -2,11 +2,13 @@ import { Letter } from '../utils/LetterObjectFactory';
 
 export enum GameEventType {
   ANY = 'any',
+  AUDIO_LOADED = 'audio-loaded',
   VALID_LETTER = 'valid-letter',
   COMPLETE_LETTER_OBJ = 'complete-letter-obj',
 }
 
 export type GameEvent =
+  | { type: GameEventType.AUDIO_LOADED }
   | { type: GameEventType.COMPLETE_LETTER_OBJ; letters: Letter[] }
   | { type: GameEventType.VALID_LETTER; letter: Letter };
 

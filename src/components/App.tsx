@@ -17,7 +17,7 @@ export class App extends React.PureComponent {
     if (this.appState.screen === Screen.GAME && this.appState.gameState) {
       screen = <GameScreen gameState={this.appState.gameState} />;
     } else {
-      screen = <StartScreen startGame={this.appState.startGame} />;
+      screen = <StartScreen loading={this.appState.loading} startGame={this.appState.startGame} />;
     }
 
     return (
