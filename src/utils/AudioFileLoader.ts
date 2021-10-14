@@ -4,6 +4,8 @@ import { gameObserver, GameEventType } from '../events/GameObserver';
 
 import '../assets/background-base.wav';
 import '../assets/asteroidbelt_a.ogg';
+import '../assets/asteroidbelt_b.ogg';
+import '../assets/asteroidbelt_c.ogg';
 
 export class AudioFileLoader {
   constructor(private audioMap: Map<string, Howl>) {
@@ -24,6 +26,18 @@ export class AudioFileLoader {
     this.audioMap.set(bgBaseId, bgBase);
 
     // Letter audio
+    //const letters = 'abcdefghikjlmnopqrstuvwxyz'.split('');
+
+    const letters = 'abc'.split('');
+    letters.forEach((char) => {
+      const howl = new Howl({
+        src: [`../assets/asteroidbelt_${char}.ogg`],
+        onloaderror: () => onLoadError(char),
+        onload: this.onLoadAudioFile,
+        preload: false,
+      });
+      this.audioMap.set(char, howl);
+    });
 
     // Now load everything in the map
     Array.from(this.audioMap.values()).forEach((howl) => howl.load());
