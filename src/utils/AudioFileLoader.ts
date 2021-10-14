@@ -6,6 +6,29 @@ import '../assets/background-base.wav';
 import '../assets/asteroidbelt_a.ogg';
 import '../assets/asteroidbelt_b.ogg';
 import '../assets/asteroidbelt_c.ogg';
+import '../assets/asteroidbelt_d.ogg';
+import '../assets/asteroidbelt_e.ogg';
+import '../assets/asteroidbelt_f.ogg';
+import '../assets/asteroidbelt_g.ogg';
+import '../assets/asteroidbelt_h.ogg';
+import '../assets/asteroidbelt_i.ogg';
+import '../assets/asteroidbelt_j.ogg';
+import '../assets/asteroidbelt_k.ogg';
+import '../assets/asteroidbelt_l.ogg';
+import '../assets/asteroidbelt_m.ogg';
+import '../assets/asteroidbelt_n.ogg';
+import '../assets/asteroidbelt_o.ogg';
+import '../assets/asteroidbelt_p.ogg';
+import '../assets/asteroidbelt_q.ogg';
+import '../assets/asteroidbelt_r.ogg';
+import '../assets/asteroidbelt_s.ogg';
+import '../assets/asteroidbelt_t.ogg';
+import '../assets/asteroidbelt_u.ogg';
+import '../assets/asteroidbelt_v.ogg';
+import '../assets/asteroidbelt_w.ogg';
+import '../assets/asteroidbelt_x.ogg';
+import '../assets/asteroidbelt_y.ogg';
+import '../assets/asteroidbelt_z.ogg';
 
 export class AudioFileLoader {
   constructor(private audioMap: Map<string, Howl>) {
@@ -26,9 +49,7 @@ export class AudioFileLoader {
     this.audioMap.set(bgBaseId, bgBase);
 
     // Letter audio
-    //const letters = 'abcdefghikjlmnopqrstuvwxyz'.split('');
-
-    const letters = 'abc'.split('');
+    const letters = 'abcdefghikjlmnopqrstuvwxyz'.split('');
     letters.forEach((char) => {
       const howl = new Howl({
         src: [`../assets/asteroidbelt_${char}.ogg`],
