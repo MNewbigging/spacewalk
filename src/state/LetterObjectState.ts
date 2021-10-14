@@ -77,6 +77,7 @@ export class LetterObjectState extends FallingObjectState {
     this.active = true;
 
     // Send the completed event with playback group init
+
     const letterPlaybackGroupInit: LetterPlaybackGroupInit = {
       id: this.id,
       letterTimeMap: this.timestamps,

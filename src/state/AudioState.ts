@@ -6,7 +6,8 @@ import { Letter } from '../utils/LetterObjectFactory';
 
 export interface LetterPlaybackGroupInit {
   id: string;
-  letterTimeMap: Map<Letter, number>;
+  letters: string[];
+  timestamps: number[];
 }
 
 export interface LetterPlaybackGroup {
@@ -90,6 +91,23 @@ export class AudioState {
     }
 
     // Build the playback group
-    event.letterTimes.forEach((time: number, letter: Letter) => {});
+    const items: LetterPlaybackItem[] = [];
+
+    const letters = event.letterPlaybackGroupInit.letters;
+    const timestamps = event.letterPlaybackGroupInit.timestamps;
+
+    for (let i = 0; i < letters.length; i++) {
+      const curLetterTime = timestamps[i] - this.startTime;
+
+      if (i + 1 < letters.length) {
+      }
+    }
+
+    /**
+     * Get the current time for each timestamp, relative to start time
+     * for current and next, bubble up through letters:
+     * timeDiff = nextTime - thisTime
+     * interval = timeDiff * nextLetter.interval (rounded)
+     */
   };
 }
