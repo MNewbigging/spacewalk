@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react';
 import React from 'react';
 
 import './start-screen.scss';
@@ -7,6 +8,7 @@ interface Props {
   startGame: () => void;
 }
 
+@observer
 export class StartScreen extends React.Component<Props> {
   public render() {
     const { loading, startGame } = this.props;
@@ -14,7 +16,7 @@ export class StartScreen extends React.Component<Props> {
     return (
       <div className={'start-screen'}>
         <button onClick={startGame} disabled={loading}>
-          Start
+          {loading ? <span>Loading</span> : <span>Start</span>}
         </button>
       </div>
     );
