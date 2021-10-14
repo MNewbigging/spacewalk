@@ -46,4 +46,14 @@ export class AudioUtils {
 
     return intervalMap;
   }
+
+  public static makeIntervalQueueMap(intervals: number[]) {
+    // Initialises the sets within the queue map for the intervals we use
+    const intervalQueueMap = new Map<number, Set<string>>();
+
+    const uniqueIntervals = new Set<number>(intervals);
+    uniqueIntervals.forEach((interval) => intervalQueueMap.set(interval, new Set<string>()));
+
+    return intervalQueueMap;
+  }
 }

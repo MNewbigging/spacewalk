@@ -10,12 +10,16 @@ export class AudioState {
   private bpm = 120;
   private startTime = 0;
   private letterIntervalMap: Map<string, number>;
-  private intervalQueueMap = new Map<number, Set<string>>();
+  private intervalQueueMap: Map<number, Set<string>>;
   private audioMap = new Map<string, Howl>();
 
   constructor() {
     // Generate the interval values map for each character
     this.letterIntervalMap = AudioUtils.makeLetterIntervalMap(this.bpm);
+
+    // Generate the queue map from the intervals we're using
+    const intervals = Array.from(this.letterIntervalMap.values());
+    this.intervalQueueMap = AudioUtils.makeIntervalQueueMap(intervals);
 
     // Load audio files
     new AudioFileLoader(this.audioMap);
@@ -55,6 +59,7 @@ export class AudioState {
     // Play all the sounds now
     letterSet.forEach((letter) => {
       // play the sound for this letter
+      this.audioMap.get(letter).play();
     });
 
     // Then clear the set for this interval
