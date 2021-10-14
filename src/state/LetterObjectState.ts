@@ -43,11 +43,12 @@ export class LetterObjectState extends FallingObjectState {
     // Highlight the letter if it's a match
     if (nextLetter.char === key) {
       nextLetter.highlight = LetterHighlightState.HIGHLIGHT;
+      gameObserver.fireEvent({ type: GameEventType.VALID_LETTER, letter: nextLetter });
       // Is this the last letter?
       if (nextLetterIdx === this.letters.length - 1) {
         // Letter object now active
         this.active = true;
-        gameObserver.fireEvent({ event: GameEventType.COMPLETE_LETTER_OBJ, letterObj: this });
+        gameObserver.fireEvent({ type: GameEventType.COMPLETE_LETTER_OBJ, letters: this.letters });
       }
     } else {
       // Otherwise, if there were existing highlighted letters, show warning
