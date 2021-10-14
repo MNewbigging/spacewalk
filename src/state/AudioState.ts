@@ -15,13 +15,13 @@ export class AudioState {
   private bpm = 120;
   private startTime = 0;
   private letterIntervalMap: Map<string, number>;
-  private fourthSfx = new Set<string>();
+  private intervalQueueMap = new Map<number, Set<string>>();
 
   constructor() {
     // Generate the interval values map for each character
     this.letterIntervalMap = AudioUtils.makeLetterIntervalMap(this.bpm);
 
-    this.startTime = Date.now();
+    this.start();
 
     gameObserver.addGameEventListener(this.onValidLetter, GameEventType.VALID_LETTER);
   }
@@ -31,23 +31,16 @@ export class AudioState {
   }
 
   private onValidLetter = (event: GameEvent) => {
-    console.log('audio valid letter, ', event);
     if (event.type !== GameEventType.VALID_LETTER) {
       return;
     }
 
-    /**
-     * Get timeout for when to play this letter sound:
-     *
-     * now - start time = diff
-     * diff % interval  = remainder
-     * interval - remainder = timeout
-     */
+    const interval = this.letterIntervalMap.get(event.letter.char);
+    this.intervalQueueMap.get(interval).add(event.letter.char);
 
+    // Do as little as possible after this point to keep calcs accurate
     const curTime = Date.now();
     const timeDiff = curTime - this.startTime;
-
-    const interval = this.letterIntervalMap.get(event.letter.char);
 
     const intervalDiff = timeDiff % interval;
 
@@ -57,12 +50,17 @@ export class AudioState {
     setTimeout(() => this.onNextInterval(interval), nextInterval - 1);
   };
 
-  private onNextInterval = (int: number) => {
-    const curTime = Date.now();
-    const timeDiff = curTime - this.startTime;
-    console.log('timeDiff: ', timeDiff);
+  private onNextInterval = (interval: number) => {
+    // Get the letters to play sounds for this interval
+    const letterSet = this.intervalQueueMap.get(interval);
 
-    const intervalDiff = timeDiff % int;
-    console.log('int mod', intervalDiff);
+    // Play all the sounds now
+    letterSet.forEach((letter) => {
+      // play the sound for this letter
+    });
+
+    // Then clear the set for this interval
+    letterSet.clear();
+    this.intervalQueueMap.set(interval, letterSet);
   };
 }
