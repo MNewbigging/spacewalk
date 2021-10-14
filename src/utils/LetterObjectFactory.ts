@@ -18,9 +18,12 @@ export class LetterObjectFactory {
     // Position along screen using left property
     const leftPos = RandomUtils.getRandomRangeInt(1, 80);
 
+    // Random speed within range
+    const speed = RandomUtils.getRandomRangeInt(10, 20);
+
     const style: CSSProperties = {
       left: `${leftPos}%`,
-      animationDuration: '10s',
+      animationDuration: `${speed}s`,
     };
 
     // Generate random letters for this object
