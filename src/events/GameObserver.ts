@@ -1,6 +1,10 @@
-export enum GameEvent {
+import { LetterObjectState } from '../state/LetterObjectState';
+
+export enum GameEventType {
   COMPLETE_LETTER_OBJ = 'complete-letter-obj',
 }
+
+export type GameEvent = { event: GameEventType.COMPLETE_LETTER_OBJ; letterObj: LetterObjectState };
 
 type GameEventListener = (event: GameEvent) => void;
 

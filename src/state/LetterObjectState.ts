@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx';
 import { CSSProperties } from 'react';
-import { GameEvent, gameObserver } from '../events/GameObserver';
+import { GameEventType, gameObserver } from '../events/GameObserver';
 import { keyboardObserver } from '../events/KeyboardObserver';
 import { RandomUtils } from '../utils/RandomUtils';
 import { FallingObjectState } from './FallingObjectState';
@@ -37,7 +37,7 @@ export class LetterObjectState extends FallingObjectState {
     keyboardObserver.removeKeyListener(this.onKeyPress);
   }
 
-  private onKeyPress = (key: string) => {
+  @action private onKeyPress = (key: string) => {
     // Only care about keys a-z
     if (!/[a-zA-Z]/.test(key)) {
       return;
@@ -59,8 +59,7 @@ export class LetterObjectState extends FallingObjectState {
       if (nextLetterIdx === this.letters.length - 1) {
         // Letter object now active
         this.active = true;
-        //setTimeout(this.resetLetterHighlights, 500);
-        gameObserver.fireEvent(GameEvent.COMPLETE_LETTER_OBJ);
+        gameObserver.fireEvent({ event: GameEventType.COMPLETE_LETTER_OBJ, letterObj: this });
       }
     } else {
       // Otherwise, if there were existing highlighted letters, show warning

@@ -20,7 +20,9 @@
   "author": "Matt",
   "license": "MIT",
   "dependencies": {
+    "@types/howler": "^2.2.4",
     "file-loader": "^6.1.0",
+    "howler": "^2.2.3",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
     "react": "^16.13.1",
