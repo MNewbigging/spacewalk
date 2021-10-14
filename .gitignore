@@ -10,6 +10,12 @@
 *.userosscache
 *.sln.docstates
 
+# Distribution files
+dist/
+dist/js/
+dist\
+dist\js\
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

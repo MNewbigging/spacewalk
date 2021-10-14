@@ -1,5 +1,8 @@
+import { Howl, HowlOptions } from 'howler';
 import { GameEvent, GameEventType, gameObserver } from '../events/GameObserver';
 import { AudioUtils } from '../utils/AudioUtils';
+
+import '../assets/background-base.wav';
 
 export enum Interval {
   FOUR,
@@ -16,17 +19,28 @@ export class AudioState {
   private startTime = 0;
   private letterIntervalMap: Map<string, number>;
   private intervalQueueMap = new Map<number, Set<string>>();
+  private backgroundBase: Howl;
 
   constructor() {
     // Generate the interval values map for each character
     this.letterIntervalMap = AudioUtils.makeLetterIntervalMap(this.bpm);
 
-    this.start();
+    const options: HowlOptions = {};
+
+    this.backgroundBase = new Howl({
+      src: ['../assets/background-base.wav'],
+      onloaderror: () => {
+        console.log('load error');
+      },
+    });
 
     gameObserver.addGameEventListener(this.onValidLetter, GameEventType.VALID_LETTER);
+
+    this.start();
   }
 
   private start() {
+    //this.backgroundBase.play();
     this.startTime = Date.now();
   }
 

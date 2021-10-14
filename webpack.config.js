@@ -26,10 +26,14 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.(wav|png|jpe?g|gif)$/i,
         //use: 'file-loader?name=./assets/[name].[ext]',
         use: 'file-loader?name=[name].[ext]&outputPath=./assets/',
       },
+      // {
+      //   test: /\.wav$/,
+      //   use: 'file-loader?name=[name].[ext]&outputPath=./assets/',
+      // },
       {
         test: /\.svg$/,
         use: ['@svgr/webpack'],
