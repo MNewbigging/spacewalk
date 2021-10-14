@@ -2,9 +2,22 @@ import { Howl } from 'howler';
 import { GameEvent, GameEventType, gameObserver } from '../events/GameObserver';
 import { AudioUtils } from '../utils/AudioUtils';
 import { AudioFileLoader } from '../utils/AudioFileLoader';
+import { Letter } from '../utils/LetterObjectFactory';
 
-import '../assets/background-base.wav';
-import '../assets/asteroidbelt_a.ogg';
+export interface LetterPlaybackGroupInit {
+  id: string;
+  letterTimeMap: Map<Letter, number>;
+}
+
+export interface LetterPlaybackGroup {
+  id: string;
+  items: LetterPlaybackItem[];
+}
+
+export interface LetterPlaybackItem {
+  letter: string;
+  interval: number;
+}
 
 export class AudioState {
   private bpm = 120;
@@ -25,6 +38,10 @@ export class AudioState {
     new AudioFileLoader(this.audioMap);
 
     gameObserver.addGameEventListener(this.onValidLetter, GameEventType.VALID_LETTER);
+    gameObserver.addGameEventListener(
+      this.onCompleteLetterGroup,
+      GameEventType.COMPLETE_LETTER_OBJ
+    );
   }
 
   public start() {
@@ -49,10 +66,10 @@ export class AudioState {
     const nextInterval = interval - intervalDiff;
 
     // - 1 removes a ms for the next event cycle
-    setTimeout(() => this.onNextInterval(interval), nextInterval - 1);
+    setTimeout(() => this.onNextLetterInterval(interval), nextInterval - 1);
   };
 
-  private onNextInterval = (interval: number) => {
+  private onNextLetterInterval = (interval: number) => {
     // Get the letters to play sounds for this interval
     const letterSet = this.intervalQueueMap.get(interval);
 
@@ -65,5 +82,14 @@ export class AudioState {
     // Then clear the set for this interval
     letterSet.clear();
     this.intervalQueueMap.set(interval, letterSet);
+  };
+
+  private onCompleteLetterGroup = (event: GameEvent) => {
+    if (event.type !== GameEventType.COMPLETE_LETTER_OBJ) {
+      return;
+    }
+
+    // Build the playback group
+    event.letterTimes.forEach((time: number, letter: Letter) => {});
   };
 }

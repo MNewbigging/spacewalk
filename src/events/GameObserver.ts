@@ -1,3 +1,4 @@
+import { LetterPlaybackGroupInit } from '../state/AudioState';
 import { Letter } from '../utils/LetterObjectFactory';
 
 export enum GameEventType {
@@ -9,7 +10,7 @@ export enum GameEventType {
 
 export type GameEvent =
   | { type: GameEventType.AUDIO_LOADED }
-  | { type: GameEventType.COMPLETE_LETTER_OBJ; letters: Letter[] }
+  | { type: GameEventType.COMPLETE_LETTER_OBJ; letterPlaybackGroupInit: LetterPlaybackGroupInit }
   | { type: GameEventType.VALID_LETTER; letter: Letter };
 
 type GameEventListener = (event: GameEvent) => void;

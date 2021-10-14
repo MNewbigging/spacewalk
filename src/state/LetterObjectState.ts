@@ -4,12 +4,14 @@ import { GameEventType, gameObserver } from '../events/GameObserver';
 import { keyboardObserver } from '../events/KeyboardObserver';
 import { Letter, LetterHighlightState } from '../utils/LetterObjectFactory';
 import { RandomUtils } from '../utils/RandomUtils';
+import { LetterPlaybackGroupInit } from './AudioState';
 import { FallingObjectState } from './FallingObjectState';
 
 export class LetterObjectState extends FallingObjectState {
   public id: string;
   @observable public letters: Letter[];
   @observable public active = false;
+  private timestamps = new Map<Letter, number>();
 
   constructor(style: CSSProperties, letters: Letter[]) {
     super(style);
@@ -58,15 +60,32 @@ export class LetterObjectState extends FallingObjectState {
     // Send event for it
     gameObserver.fireEvent({ type: GameEventType.VALID_LETTER, letter });
 
+    // Save timestamp of match
+    this.timestamps.set(letter, Date.now());
+
     // Is this the last one to match?
     const toMatch = this.letters.filter(
       (letter) => letter.highlight !== LetterHighlightState.HIGHLIGHT
     );
     if (!toMatch.length) {
-      // Letter object now active
-      this.active = true;
-      gameObserver.fireEvent({ type: GameEventType.COMPLETE_LETTER_OBJ, letters: this.letters });
+      this.activate();
     }
+  }
+
+  @action private activate() {
+    // Letter object now active
+    this.active = true;
+
+    // Send the completed event with playback group init
+    const letterPlaybackGroupInit: LetterPlaybackGroupInit = {
+      id: this.id,
+      letterTimeMap: this.timestamps,
+    };
+
+    gameObserver.fireEvent({
+      type: GameEventType.COMPLETE_LETTER_OBJ,
+      letterPlaybackGroupInit,
+    });
   }
 
   @action private resetLetterHighlights = () => {
