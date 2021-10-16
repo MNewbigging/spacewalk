@@ -56,6 +56,7 @@ export class AudioFileLoader {
       onloaderror: () => onLoadError(bgBaseId),
       onload: this.onLoadAudioFile,
       preload: false,
+      loop: true,
     });
     this.audioMap.set(bgBaseId, bgBase);
 

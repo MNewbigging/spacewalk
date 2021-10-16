@@ -1,10 +1,12 @@
 import { action, observable } from 'mobx';
 import { LetterObjectFactory } from '../utils/LetterObjectFactory';
 import { RandomUtils } from '../utils/RandomUtils';
+import { GameStageState } from './GameStageState';
 import { LetterObjectState } from './LetterObjectState';
 
 export class GameState {
   @observable public letterObjects: LetterObjectState[] = [];
+  private gameStageState = new GameStageState();
   private paused = false;
 
   constructor() {
@@ -15,11 +17,10 @@ export class GameState {
   }
 
   private queueLetterObject() {
-    // Set timeout for next letter object to be added
-    const minDelay = 1000;
-    const maxDelay = 5000;
+    // Set timeout for next letter object to be added based on game stage
+    const spawnDelay = this.gameStageState.getCurrentStage().spawnDelay;
 
-    setTimeout(this.addLetterObject, RandomUtils.getRandomRangeFloat(minDelay, maxDelay));
+    setTimeout(this.addLetterObject, spawnDelay);
   }
 
   private addLetterObject = () => {
@@ -28,10 +29,11 @@ export class GameState {
     }
 
     // Adds a new letter object to be displayed
-    const letterObj = LetterObjectFactory.createLetterObject();
+    const letterObj = LetterObjectFactory.createLetterObject(this.gameStageState.getCurrentStage());
 
     this.letterObjects.push(letterObj);
 
+    this.gameStageState.countSpawn();
     this.removeLetterObjects();
     this.queueLetterObject();
   };
