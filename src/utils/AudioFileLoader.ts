@@ -61,7 +61,7 @@ export class AudioFileLoader {
     this.audioMap.set(bgBaseId, bgBase);
 
     // Letter audio
-    const letters = 'abcdefghikjlmnopqrstuvwxyz'.split('');
+    const letters = 'abcdeghikjlmnoqrstuvwxyz'.split('');
     letters.forEach((char) => {
       const howl = new Howl({
         src: [this.basePath + `/asteroidbelt_${char}.ogg`],
@@ -71,6 +71,25 @@ export class AudioFileLoader {
       });
       this.audioMap.set(char, howl);
     });
+
+    // Set f and p volumes as 0.5
+    const fHowl = new Howl({
+      src: [this.basePath + '/asteroidbelt_f.ogg'],
+      onloaderror: () => onLoadError("f"),
+      onload: this.onLoadAudioFile,
+      preload: false,
+      volume: 0.5,
+    });
+    this.audioMap.set("f", fHowl)
+
+    const pHowl = new Howl({
+      src: [this.basePath + '/asteroidbelt_p.ogg'],
+      onloaderror: () => onLoadError("p"),
+      onload: this.onLoadAudioFile,
+      preload: false,
+      volume: 0.5,
+    });
+    this.audioMap.set("p", pHowl)
 
     // Now load everything in the map
     Array.from(this.audioMap.values()).forEach((howl) => howl.load());
