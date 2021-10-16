@@ -3,20 +3,16 @@ import { CSSProperties } from 'react';
 import { GameEventType, gameObserver } from '../events/GameObserver';
 import { keyboardObserver } from '../events/KeyboardObserver';
 import { Letter, LetterHighlightState } from '../utils/LetterObjectFactory';
-import { RandomUtils } from '../utils/RandomUtils';
 import { LetterPlaybackGroupInit } from './AudioState';
 import { FallingObjectState } from './FallingObjectState';
 
 export class LetterObjectState extends FallingObjectState {
-  public id: string;
   @observable public letters: Letter[];
   @observable public active = false;
   private timestamps: number[] = [];
 
   constructor(style: CSSProperties, letters: Letter[]) {
     super(style);
-
-    this.id = RandomUtils.createId();
 
     this.letters = letters;
 
@@ -28,6 +24,10 @@ export class LetterObjectState extends FallingObjectState {
   }
 
   @action private onKeyPress = (key: string) => {
+    if (!this.isOnscreen()) {
+      return;
+    }
+
     // Only care about keys a-z
     if (!/[a-zA-Z]/.test(key)) {
       return;

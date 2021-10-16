@@ -48,47 +48,13 @@ export class AudioState {
       this.onCompleteLetterGroup,
       GameEventType.COMPLETE_LETTER_OBJ
     );
+    gameObserver.addGameEventListener(this.onGroupExit, GameEventType.LETTER_OBJ_EXIT);
   }
 
   public start() {
     this.audioMap.get('background-base').play();
     this.startTime = Date.now();
   }
-
-  private onValidLetter = (event: GameEvent) => {
-    if (event.type !== GameEventType.VALID_LETTER) {
-      return;
-    }
-
-    const interval = this.letterIntervalMap.get(event.letter.char);
-    this.intervalQueueMap.get(interval).add(event.letter.char);
-
-    // Do as little as possible after this point to keep calcs accurate
-    const curTime = Date.now();
-    const timeDiff = curTime - this.startTime;
-
-    const intervalDiff = timeDiff % interval;
-
-    const nextInterval = interval - intervalDiff;
-
-    // - 1 removes a ms for the next event cycle
-    setTimeout(() => this.onNextLetterInterval(interval), nextInterval - 1);
-  };
-
-  private onNextLetterInterval = (interval: number) => {
-    // Get the letters to play sounds for this interval
-    const letterSet = this.intervalQueueMap.get(interval);
-
-    // Play all the sounds now
-    letterSet.forEach((letter) => {
-      // play the sound for this letter
-      this.audioMap.get(letter).play();
-    });
-
-    // Then clear the set for this interval
-    letterSet.clear();
-    this.intervalQueueMap.set(interval, letterSet);
-  };
 
   private onCompleteLetterGroup = (event: GameEvent) => {
     if (event.type !== GameEventType.COMPLETE_LETTER_OBJ) {
@@ -108,9 +74,9 @@ export class AudioState {
       const nextIdx = i + 1;
       if (nextIdx === letters.length) {
         // Reached the end - determine interval between loops for the whole group
-        const totalTime = items.reduce((acc, cur) => acc + cur.interval, 0);
-        const barRemainder = totalTime % this.bar;
-        const barDiff = this.bar - barRemainder;
+        // const totalTime = items.reduce((acc, cur) => acc + cur.interval, 0);
+        // const barRemainder = totalTime % this.bar;
+        // const barDiff = this.bar - barRemainder;
         nextInterval = this.bar; //+ barDiff;
       } else {
         // Determine interval between this and next letter
@@ -160,5 +126,48 @@ export class AudioState {
     }
 
     setTimeout(() => this.nextInPlaybackGroup(id), item.interval);
+  };
+
+  private onGroupExit = (event: GameEvent) => {
+    if (event.type !== GameEventType.LETTER_OBJ_EXIT) {
+      return;
+    }
+
+    this.playbackGroupMap.delete(event.id);
+  };
+
+  private onValidLetter = (event: GameEvent) => {
+    if (event.type !== GameEventType.VALID_LETTER) {
+      return;
+    }
+
+    const interval = this.letterIntervalMap.get(event.letter.char);
+    this.intervalQueueMap.get(interval).add(event.letter.char);
+
+    // Do as little as possible after this point to keep calcs accurate
+    const curTime = Date.now();
+    const timeDiff = curTime - this.startTime;
+
+    const intervalDiff = timeDiff % interval;
+
+    const nextInterval = interval - intervalDiff;
+
+    // - 1 removes a ms for the next event cycle
+    setTimeout(() => this.onNextLetterInterval(interval), nextInterval - 1);
+  };
+
+  private onNextLetterInterval = (interval: number) => {
+    // Get the letters to play sounds for this interval
+    const letterSet = this.intervalQueueMap.get(interval);
+
+    // Play all the sounds now
+    letterSet.forEach((letter) => {
+      // play the sound for this letter
+      this.audioMap.get(letter).play();
+    });
+
+    // Then clear the set for this interval
+    letterSet.clear();
+    this.intervalQueueMap.set(interval, letterSet);
   };
 }

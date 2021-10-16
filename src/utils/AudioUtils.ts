@@ -62,36 +62,4 @@ export class AudioUtils {
 
     return intervalQueueMap;
   }
-
-  public static makePlaybackGroup(
-    init: LetterPlaybackGroupInit,
-    startTime: number,
-    intervalMap: Map<string, number>
-  ) {
-    // Build the playback group
-    const items: LetterPlaybackItem[] = [];
-
-    const letters = init.letters;
-    const timestamps = init.timestamps;
-
-    for (let i = 0; i < letters.length; i++) {
-      const curLetterTime = timestamps[i] - startTime;
-
-      const nextIdx = i + 1;
-      if (nextIdx === letters.length) {
-        // Reached the end
-      } else {
-        const nextLetterTime = timestamps[nextIdx] - startTime;
-
-        const timeDiff = nextLetterTime - curLetterTime;
-        const nextLetterInterval = intervalMap.get(letters[nextIdx]);
-        const nextInterval = Math.round(timeDiff / nextLetterInterval);
-
-        items.push({
-          letter: letters[i],
-          interval: nextInterval,
-        });
-      }
-    }
-  }
 }

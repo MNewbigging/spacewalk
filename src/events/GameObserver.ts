@@ -6,12 +6,14 @@ export enum GameEventType {
   AUDIO_LOADED = 'audio-loaded',
   VALID_LETTER = 'valid-letter',
   COMPLETE_LETTER_OBJ = 'complete-letter-obj',
+  LETTER_OBJ_EXIT = 'letter-obj-exit',
 }
 
 export type GameEvent =
   | { type: GameEventType.AUDIO_LOADED }
   | { type: GameEventType.COMPLETE_LETTER_OBJ; letterPlaybackGroupInit: LetterPlaybackGroupInit }
-  | { type: GameEventType.VALID_LETTER; letter: Letter };
+  | { type: GameEventType.VALID_LETTER; letter: Letter }
+  | { type: GameEventType.LETTER_OBJ_EXIT; id: string };
 
 type GameEventListener = (event: GameEvent) => void;
 
