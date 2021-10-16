@@ -10,7 +10,8 @@ export class GameState {
   private paused = false;
 
   constructor() {
-    this.queueLetterObject();
+    // Start the first letter now
+    this.addLetterObject();
 
     window.addEventListener('blur', this.onBlurWindow);
     window.addEventListener('focus', this.onFocusWindow);
