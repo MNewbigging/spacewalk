@@ -43,7 +43,7 @@ export class AudioState {
     // Load audio files
     new AudioFileLoader(this.audioMap);
 
-    gameObserver.addGameEventListener(this.onValidLetter, GameEventType.VALID_LETTER);
+    // gameObserver.addGameEventListener(this.onValidLetter, GameEventType.VALID_LETTER);
     gameObserver.addGameEventListener(
       this.onCompleteLetterGroup,
       GameEventType.COMPLETE_LETTER_OBJ
@@ -111,7 +111,7 @@ export class AudioState {
         const totalTime = items.reduce((acc, cur) => acc + cur.interval, 0);
         const barRemainder = totalTime % this.bar;
         const barDiff = this.bar - barRemainder;
-        nextInterval = this.bar + barDiff;
+        nextInterval = this.bar; //+ barDiff;
       } else {
         // Determine interval between this and next letter
         const nextLetterTime = timestamps[nextIdx] - this.startTime;
@@ -135,13 +135,14 @@ export class AudioState {
     this.playbackGroupMap.set(playbackGroup.id, playbackGroup);
 
     // Now work out when to start the group playback
-    // Start at beginning of next bar
+    // Start at interval of first letter in group
     const now = Date.now();
     const diff = now - this.startTime;
-    const barRemainder = diff % this.bar;
-    const barDiff = this.bar - barRemainder;
+    const interval = AudioUtils.get4Interval(this.bpm);
+    const intervalRemainder = diff % interval;
+    const startIn = interval - intervalRemainder;
 
-    setTimeout(() => this.nextInPlaybackGroup(playbackGroup.id), barDiff);
+    setTimeout(() => this.nextInPlaybackGroup(playbackGroup.id), startIn);
   };
 
   private nextInPlaybackGroup = (id: string) => {
