@@ -11,7 +11,7 @@ export class LetterObjectState extends FallingObjectState {
   public id: string;
   @observable public letters: Letter[];
   @observable public active = false;
-  private timestamps = new Map<Letter, number>();
+  private timestamps: number[] = [];
 
   constructor(style: CSSProperties, letters: Letter[]) {
     super(style);
@@ -47,6 +47,7 @@ export class LetterObjectState extends FallingObjectState {
     } else {
       // If there were existing highlighted letters, show warning
       if (this.letters.find((l) => l.highlight === LetterHighlightState.HIGHLIGHT)) {
+        this.timestamps = [];
         this.letters.forEach((letter) => (letter.highlight = LetterHighlightState.WARN));
         setTimeout(this.resetLetterHighlights, 500);
       }
@@ -61,7 +62,7 @@ export class LetterObjectState extends FallingObjectState {
     gameObserver.fireEvent({ type: GameEventType.VALID_LETTER, letter });
 
     // Save timestamp of match
-    this.timestamps.set(letter, Date.now());
+    this.timestamps.push(Date.now());
 
     // Is this the last one to match?
     const toMatch = this.letters.filter(
@@ -80,7 +81,8 @@ export class LetterObjectState extends FallingObjectState {
 
     const letterPlaybackGroupInit: LetterPlaybackGroupInit = {
       id: this.id,
-      letterTimeMap: this.timestamps,
+      letters: this.letters.map((letter) => letter.char),
+      timestamps: this.timestamps,
     };
 
     gameObserver.fireEvent({

@@ -13,6 +13,7 @@ export interface LetterPlaybackGroupInit {
 export interface LetterPlaybackGroup {
   id: string;
   items: LetterPlaybackItem[];
+  nextIdx: number;
 }
 
 export interface LetterPlaybackItem {
@@ -22,12 +23,16 @@ export interface LetterPlaybackItem {
 
 export class AudioState {
   private bpm = 120;
+  private bar: number;
   private startTime = 0;
   private letterIntervalMap: Map<string, number>;
   private intervalQueueMap: Map<number, Set<string>>;
   private audioMap = new Map<string, Howl>();
+  private playbackGroupMap = new Map<string, LetterPlaybackGroup>();
 
   constructor() {
+    this.bar = AudioUtils.get1Bar(this.bpm);
+
     // Generate the interval values map for each character
     this.letterIntervalMap = AudioUtils.makeLetterIntervalMap(this.bpm);
 
@@ -99,15 +104,60 @@ export class AudioState {
     for (let i = 0; i < letters.length; i++) {
       const curLetterTime = timestamps[i] - this.startTime;
 
-      if (i + 1 < letters.length) {
+      let nextInterval = 0;
+      const nextIdx = i + 1;
+      if (nextIdx === letters.length) {
+        // Reached the end - determine interval between loops for the whole group
+        const totalTime = items.reduce((acc, cur) => acc + cur.interval, 0);
+        const barRemainder = totalTime % this.bar;
+        const barDiff = this.bar - barRemainder;
+        nextInterval = this.bar + barDiff;
+      } else {
+        // Determine interval between this and next letter
+        const nextLetterTime = timestamps[nextIdx] - this.startTime;
+        const timeDiff = nextLetterTime - curLetterTime;
+        const nextLetterInterval = this.letterIntervalMap.get(letters[nextIdx]);
+        const intervalCount = Math.round(timeDiff / nextLetterInterval);
+        nextInterval = nextLetterInterval * intervalCount;
       }
+
+      items.push({
+        letter: letters[i],
+        interval: nextInterval,
+      });
     }
 
-    /**
-     * Get the current time for each timestamp, relative to start time
-     * for current and next, bubble up through letters:
-     * timeDiff = nextTime - thisTime
-     * interval = timeDiff * nextLetter.interval (rounded)
-     */
+    const playbackGroup: LetterPlaybackGroup = {
+      id: event.letterPlaybackGroupInit.id,
+      items,
+      nextIdx: 0,
+    };
+    this.playbackGroupMap.set(playbackGroup.id, playbackGroup);
+
+    // Now work out when to start the group playback
+    // Start at beginning of next bar
+    const now = Date.now();
+    const diff = now - this.startTime;
+    const barRemainder = diff % this.bar;
+    const barDiff = this.bar - barRemainder;
+
+    setTimeout(() => this.nextInPlaybackGroup(playbackGroup.id), barDiff);
+  };
+
+  private nextInPlaybackGroup = (id: string) => {
+    const group = this.playbackGroupMap.get(id);
+    if (!group) {
+      return;
+    }
+
+    const item = group.items[group.nextIdx];
+    this.audioMap.get(item.letter).play();
+
+    group.nextIdx++;
+    if (group.nextIdx === group.items.length) {
+      group.nextIdx = 0;
+    }
+
+    setTimeout(() => this.nextInPlaybackGroup(id), item.interval);
   };
 }
