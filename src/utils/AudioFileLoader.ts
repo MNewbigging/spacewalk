@@ -39,10 +39,12 @@ export class AudioFileLoader {
   }
 
   private setBasePath() {
-    if (window.location.href.includes('localhost')) {
+    if (window.location.href.includes('github')) {
+      this.basePath = '/text-fall/assets/';
+    } else if (window.location.href.includes('localhost')) {
       this.basePath = '../assets/';
     } else {
-      this.basePath = '/spacewalk/assets/';
+      this.basePath = 'assets/';
     }
   }
 
@@ -75,21 +77,21 @@ export class AudioFileLoader {
     // Set f and p volumes as 0.5
     const fHowl = new Howl({
       src: [this.basePath + '/asteroidbelt_f.ogg'],
-      onloaderror: () => onLoadError("f"),
+      onloaderror: () => onLoadError('f'),
       onload: this.onLoadAudioFile,
       preload: false,
       volume: 0.5,
     });
-    this.audioMap.set("f", fHowl)
+    this.audioMap.set('f', fHowl);
 
     const pHowl = new Howl({
       src: [this.basePath + '/asteroidbelt_p.ogg'],
-      onloaderror: () => onLoadError("p"),
+      onloaderror: () => onLoadError('p'),
       onload: this.onLoadAudioFile,
       preload: false,
       volume: 0.5,
     });
-    this.audioMap.set("p", pHowl)
+    this.audioMap.set('p', pHowl);
 
     // Now load everything in the map
     Array.from(this.audioMap.values()).forEach((howl) => howl.load());
