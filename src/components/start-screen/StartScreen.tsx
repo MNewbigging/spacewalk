@@ -15,7 +15,7 @@ export class StartScreen extends React.Component<Props> {
 
     return (
       <div className={'start-screen'}>
-        <button onClick={startGame} disabled={loading}>
+        <button className={'start-button'} onClick={startGame} disabled={loading}>
           {loading ? <span>Loading</span> : <span>Start</span>}
         </button>
       </div>

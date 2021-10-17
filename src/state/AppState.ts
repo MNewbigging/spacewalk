@@ -1,5 +1,5 @@
 import { action, observable } from 'mobx';
-import { GameEvent, GameEventType, gameObserver } from '../events/GameObserver';
+import { GameEventType, gameObserver } from '../events/GameObserver';
 import { AudioState } from './AudioState';
 import { GameState } from './GameState';
 
@@ -19,6 +19,10 @@ export class AppState {
   }
 
   @action public startGame = () => {
+    if (this.loading) {
+      return;
+    }
+
     this.gameState = new GameState();
     this.audioState.start();
     this.screen = Screen.GAME;
