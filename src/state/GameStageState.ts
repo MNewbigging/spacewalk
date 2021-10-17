@@ -16,17 +16,17 @@ export class GameStageState {
   private allStages: GameStage[] = [
     {
       name: 'Vowel time',
-      letterPool: 'aeiouyfp',
+      letterPool: 'aeiouyg',
       groupMin: 2,
       groupMax: 5,
       spawnDelay: LetterSpawnDelay.MEDIUM,
     },
     {
       name: 'Minimalist',
-      letterPool: 'aeiouyfpsbcdk',
+      letterPool: 'aeiouysbcdk',
       groupMin: 2,
       groupMax: 5,
-      spawnDelay: LetterSpawnDelay.MEDIUM,
+      spawnDelay: LetterSpawnDelay.FAST,
     },
     {
       name: 'Carnival',
@@ -37,21 +37,21 @@ export class GameStageState {
     },
     {
       name: 'Spacetime',
-      letterPool: 'aeiouyhjsqrgl',
+      letterPool: 'aeiyhjsgr',
       groupMin: 1,
       groupMax: 3,
       spawnDelay: LetterSpawnDelay.FAST,
     },
     {
       name: 'Flurry',
-      letterPool: 'aiyhjfpsbcdgkt',
+      letterPool: 'yhjfpsbcdgkt',
       groupMin: 4,
       groupMax: 10,
       spawnDelay: LetterSpawnDelay.SLOW,
     },
     {
       name: 'Weirdo',
-      letterPool: 'eouwvhjsfpgqlxz',
+      letterPool: 'wvhjsfpgqlxz',
       groupMin: 2,
       groupMax: 6,
       spawnDelay: LetterSpawnDelay.FAST,
@@ -73,7 +73,7 @@ export class GameStageState {
     spawnDelay: LetterSpawnDelay.SLOW,
   };
 
-  private spawnsBetweenStages = 10;
+  private spawnsBetweenStages = 8;
   private spawnsThisStage = 0;
 
   public countSpawn() {
