@@ -15,7 +15,7 @@ export class StartScreen extends React.Component<Props> {
 
     return (
       <div className={'start-screen'}>
-        <h1>Text fall</h1>
+        <h1>Text Fall</h1>
         <div className={'how-to-play'}>
           Letters will fall from the top of the screen in boxes. Each letter makes a certain sound.
           As you type all of the letters in a box it will activate and the sounds will play while on
