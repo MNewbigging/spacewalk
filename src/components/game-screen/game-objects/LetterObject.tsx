@@ -15,9 +15,11 @@ export class LetterObject extends React.Component<Props> {
     const { letterObject } = this.props;
 
     const active = letterObject.active ? 'active' : '';
+    const warn = letterObject.warn ? 'warn' : '';
+    const classes = ['letter-object', active, warn];
 
     return (
-      <div className={'letter-object ' + active}>
+      <div className={classes.join(' ')}>
         {letterObject.letters.map((letter, i) => (
           <div key={letterObject.id + '-' + i} className={'letter ' + letter.highlight}>
             {letter.char}

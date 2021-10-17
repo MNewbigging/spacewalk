@@ -9,6 +9,7 @@ import { FallingObjectState } from './FallingObjectState';
 export class LetterObjectState extends FallingObjectState {
   @observable public letters: Letter[];
   @observable public active = false;
+  @observable public warn = false;
   private timestamps: number[] = [];
 
   constructor(style: CSSProperties, letters: Letter[]) {
@@ -25,6 +26,10 @@ export class LetterObjectState extends FallingObjectState {
 
   @action private onKeyPress = (key: string) => {
     if (!this.isOnscreen()) {
+      return;
+    }
+
+    if (this.active) {
       return;
     }
 
@@ -49,6 +54,7 @@ export class LetterObjectState extends FallingObjectState {
       if (this.letters.find((l) => l.highlight === LetterHighlightState.HIGHLIGHT)) {
         this.timestamps = [];
         this.letters.forEach((letter) => (letter.highlight = LetterHighlightState.WARN));
+        this.warn = true;
         setTimeout(this.resetLetterHighlights, 500);
       }
     }
@@ -77,8 +83,10 @@ export class LetterObjectState extends FallingObjectState {
     // Letter object now active
     this.active = true;
 
-    // Send the completed event with playback group init
+    // Remove highlights
+    this.letters.forEach((letter) => (letter.highlight = LetterHighlightState.NONE));
 
+    // Send the completed event with playback group init
     const letterPlaybackGroupInit: LetterPlaybackGroupInit = {
       id: this.id,
       letters: this.letters.map((letter) => letter.char),
@@ -93,5 +101,6 @@ export class LetterObjectState extends FallingObjectState {
 
   @action private resetLetterHighlights = () => {
     this.letters.forEach((letter) => (letter.highlight = LetterHighlightState.NONE));
+    this.warn = false;
   };
 }
